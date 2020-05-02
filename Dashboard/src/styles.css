@@ -170,32 +170,55 @@ CARDS
   display: flex;
   flex-direction: column;
   width: 35%;
-  overflow: scroll;
+  scroll-behavior: smooth;
   height: 450px;
   background-color: #f1eded;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   margin-bottom: 50px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  position: relative;
 }
 
 .img_container {
-  position: absolute;
   z-index: 1;
-  height: 90px;
+  height: 25%;
 }
 
 .recent_cards_img {
-  height: 100%;
-  width: 499px;
+  height: 22%;
+  position: absolute;
+  width: 100%;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
-
+table {
+  text-align: center;
+}
 .card_text {
   position: relative;
-  padding-top: 72px;
   width: 100%;
   font-size: 14px;
+  overflow: scroll;
+}
+
+.card_text::-webkit-scrollbar {
+  display: none;
+}
+
+.recent_messagedate {
+  font-size: 12px;
+}
+
+.recent_messagedate {
+  width: 24%;
+  text-align: center;
+}
+
+.recent_messageprompt {
+  font-size: 14px;
+  width: 76%;
 }
 
 /*

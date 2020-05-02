@@ -2,10 +2,13 @@ import React from "react";
 
 const CardList = ({ time }) => {
   const Card = () => {
-    return time.map((prompts) => {
+    return time.map((prompts, idx) => {
       return (
-        <tr>
-          <p>{prompts.Prompt}</p>
+        <tr key={idx} className="recent_messagerow">
+          <td className="recent_messagedate">
+            {new Date(prompts.LastSent).toDateString()}
+          </td>
+          <td className="recent_messageprompt">{prompts.Prompt}</td>
         </tr>
       );
     });
@@ -13,7 +16,15 @@ const CardList = ({ time }) => {
   return (
     <div className="card_text">
       <table>
-        <Card />
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody className="all_recentmessages">
+          <Card />
+        </tbody>
       </table>
     </div>
   );

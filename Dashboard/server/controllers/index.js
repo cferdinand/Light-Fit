@@ -91,21 +91,27 @@ module.exports = {
       }
     },
     countTokens: async (req, res) => {
-      let count = await tokenCounts.find({});
-      count = { count: count[0].count };
-      res.status(200).send(count);
+      try {
+        let count = await tokenCounts.find({});
+        count = { count: count[0].count };
+        res.status(200).send(count);
+      } catch (err) {
+        console.log("Count Tokens Error: ", err);
+      }
     },
     recentlySent: async (req, res) => {
       const recentMessages = {};
       try {
         for (let collection in timeOfDay) {
-          recentMessages[collection] = await timeOfDay[
-            collection
-          ].collection.find({ Sent: true }, { $limit: 5 });
+          let recent = await timeOfDay[collection]
+            .find({ Sent: true })
+            .sort({ LastSent: "desc" })
+            .limit(5);
+          recentMessages[collection] = recent;
         }
         res.status(200).send(recentMessages);
       } catch (err) {
-        console.log("ERROR: ", err);
+        console.log("Recently Sent Error: ", err);
         res.sendStatus(500);
       }
     },

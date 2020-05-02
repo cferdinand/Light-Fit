@@ -8,6 +8,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Recent from "./Recent5";
 
 class App extends Component {
   constructor(props) {
@@ -24,7 +25,8 @@ class App extends Component {
       link: "",
       timeOfDay: "",
       emojis: [],
-      loading: true
+      loading: true,
+      recentData: {},
     };
 
     //CRUD
@@ -33,6 +35,7 @@ class App extends Component {
     this.updateEntries = this.updateEntries.bind(this);
     this.deleteEntries = this.deleteEntries.bind(this);
     this.getCount = this.getCount.bind(this);
+    this.getRecent = this.getRecent.bind(this);
     //Input Handlers
     this.inputChange = this.inputChange.bind(this);
     this.timeOfDayChange = this.timeOfDayChange.bind(this);
@@ -42,20 +45,21 @@ class App extends Component {
 
   componentDidMount() {
     this.getCount();
+    this.getRecent();
   }
 
   getEntries(string) {
     return axios
       .get("/getAll", {
         params: {
-          timeOfDay: string
-        }
+          timeOfDay: string,
+        },
       })
-      .then(result => {
+      .then((result) => {
         let list = string + "List";
         this.setState({ [list]: result.data });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 
   postEntries(newMessage) {
@@ -66,7 +70,7 @@ class App extends Component {
         this.getEntries(this.state.timeOfDay);
         this.setState({ loading: false });
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 
   updateEntries(obj) {
@@ -75,7 +79,7 @@ class App extends Component {
       .then(() => {
         this.getEntries(obj.Time);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 
   deleteEntries(obj) {
@@ -84,13 +88,19 @@ class App extends Component {
       .then(() => {
         this.getEntries(obj.Time);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }
 
   getCount() {
     axios.get("/countTokens").then(({ data }) => {
       this.setState({ TokenCount: data.count });
       this.setState({ loading: false });
+    });
+  }
+
+  getRecent() {
+    axios.get("/topdata").then(({ data }) => {
+      this.setState({ recentData: data });
     });
   }
 
@@ -110,7 +120,7 @@ class App extends Component {
     this.postEntries({
       input:
         this.state.entry + this.state.emojis.join("") + "\n" + this.state.link,
-      timeOfDay: this.state.timeOfDay
+      timeOfDay: this.state.timeOfDay,
     });
     this.setState({ emojis: [] });
   }
@@ -131,6 +141,7 @@ class App extends Component {
         <div className="counterContainer">
           <Counter counter={this.state.TokenCount} getCount={this.getCount} />
         </div>
+        <Recent topData={this.state.recentData} />
         <Form
           handleSubmit={this.handleSubmit}
           timeOfDayChange={this.timeOfDayChange}

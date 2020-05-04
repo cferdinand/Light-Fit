@@ -22,11 +22,15 @@ const messageScheduler = async (token, channel, timezone, workspace) => {
 
       // Scheduled job to execute
       const onTick = async () => {
-        await bot.chat.postMessage({
-          channel: channel,
-          text: dailyMessage[time].prompt, // Pulled from daily refresh
-        });
-        job.stop();
+        try {
+          await bot.chat.postMessage({
+            channel: channel,
+            text: dailyMessage[time].prompt, // Pulled from daily refresh
+          });
+          job.stop();
+        } catch (err) {
+          console.log(`Post Message Error: ${new Date()} \n ${err}`);
+        }
       };
 
       // Fires each day the onTick completes
@@ -34,7 +38,7 @@ const messageScheduler = async (token, channel, timezone, workspace) => {
         const hour = scheduledTime[time];
         const min = dailyMessage[time].min;
         let day = new Date().getDay();
-        if (day >= 5) {
+        if (Number(day) >= 5) {
           day = 1;
         } else {
           day++;

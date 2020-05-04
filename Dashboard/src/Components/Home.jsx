@@ -1,226 +1,132 @@
-import React, { Component } from "react";
-import axios from "axios";
-import List from "./List";
-import Form from "./Form";
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Route, Switch, BrowserRouter as Router, Link } from "react-router-dom";
+import Drawer from "@material-ui/core/Drawer";
 import Counter from "./Counter";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Messages from "./Messages";
+import NewPrompt from "./Modal";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
+import axios from "axios";
 import Recent from "./Recent5";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+const drawerWidth = 240;
 
-    this.state = {
-      MorningList: [],
-      MidDayList: [],
-      AfternoonList: [],
-      EveningList: [],
-      TokenCount: 0,
-      string: "",
-      entry: "",
-      link: "",
-      timeOfDay: "",
-      emojis: [],
-      loading: true,
-      recentData: {},
-    };
-
-    //CRUD
-    this.getEntries = this.getEntries.bind(this);
-    this.postEntries = this.postEntries.bind(this);
-    this.updateEntries = this.updateEntries.bind(this);
-    this.deleteEntries = this.deleteEntries.bind(this);
-    this.getCount = this.getCount.bind(this);
-    this.getRecent = this.getRecent.bind(this);
-    //Input Handlers
-    this.inputChange = this.inputChange.bind(this);
-    this.timeOfDayChange = this.timeOfDayChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateEmoji = this.updateEmoji.bind(this);
-  }
-
-  componentDidMount() {
-    this.getCount();
-    this.getRecent();
-  }
-
-  getEntries(string) {
-    return axios
-      .get("/getAll", {
-        params: {
-          timeOfDay: string,
-        },
-      })
-      .then((result) => {
-        let list = string + "List";
-        this.setState({ [list]: result.data });
-      })
-      .catch((err) => console.log(err));
-  }
-
-  postEntries(newMessage) {
-    this.setState({ loading: true });
-    axios
-      .post("/postOne", newMessage)
-      .then(() => {
-        this.getEntries(this.state.timeOfDay);
-        this.setState({ loading: false });
-      })
-      .catch((err) => console.log(err));
-  }
-
-  updateEntries(obj) {
-    axios
-      .put("/update", obj)
-      .then(() => {
-        this.getEntries(obj.Time);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  deleteEntries(obj) {
-    axios
-      .delete("/deleteOne", { data: obj })
-      .then(() => {
-        this.getEntries(obj.Time);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  getCount() {
-    axios.get("/countTokens").then(({ data }) => {
-      this.setState({ TokenCount: data.count });
-      this.setState({ loading: false });
-    });
-  }
-
-  getRecent() {
-    axios.get("/topdata").then(({ data }) => {
-      this.setState({ recentData: data });
-    });
-  }
-
-  inputChange(event) {
-    let name = event.target.name;
-    let value = event.target.value;
-
-    this.setState({ [name]: value });
-  }
-
-  timeOfDayChange(event) {
-    let value = event.target.value;
-    this.setState({ timeOfDay: value });
-  }
-
-  handleSubmit(event) {
-    this.postEntries({
-      input:
-        this.state.entry + this.state.emojis.join("") + "\n" + this.state.link,
-      timeOfDay: this.state.timeOfDay,
-    });
-    this.setState({ emojis: [] });
-  }
-
-  updateEmoji(newArray) {
-    this.setState({ emojis: newArray });
-  }
-
-  render() {
-    const loading = this.state.loading;
-
-    if (loading) {
-      return null;
+const useStyles = makeStyles(
+  (theme) => (
+    console.log(theme),
+    {
+      root: {
+        display: "flex",
+      },
+      appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+      },
+      drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
+      drawerPaper: {
+        width: drawerWidth,
+      },
+      drawerContainer: {
+        overflow: "auto",
+      },
+      content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+      },
     }
-    return (
-      <div className="loader">
-        <h1>Light + Fit SlackApp Messages</h1>
-        <div className="counterContainer">
-          <Counter counter={this.state.TokenCount} getCount={this.getCount} />
-        </div>
-        <Recent topData={this.state.recentData} />
-        <Form
-          handleSubmit={this.handleSubmit}
-          timeOfDayChange={this.timeOfDayChange}
-          inputChange={this.inputChange}
-          value={this.state.value}
-          edit={this.state.edit}
-          emojis={this.state.emojis}
-          updateEmoji={this.updateEmoji}
-        />
-        <div className="expansion">
-          <ExpansionPanel onClick={() => this.getEntries("Morning")}>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className="time-of-day-list">Morning</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <List
-                className="actual-list"
-                list={this.state.MorningList}
-                updateEntries={this.updateEntries}
-                deleteEntries={this.deleteEntries}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel onClick={() => this.getEntries("MidDay")}>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className="time-of-day-list">Mid-Day</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <List
-                list={this.state.MidDayList}
-                updateEntries={this.updateEntries}
-                deleteEntries={this.deleteEntries}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel onClick={() => this.getEntries("Afternoon")}>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className="time-of-day-list">Afternoon</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <List
-                list={this.state.AfternoonList}
-                updateEntries={this.updateEntries}
-                deleteEntries={this.deleteEntries}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-          <ExpansionPanel onClick={() => this.getEntries("Evening")}>
-            <ExpansionPanelSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className="time-of-day-list">Evening</Typography>
-            </ExpansionPanelSummary>
-            <ExpansionPanelDetails>
-              <List
-                list={this.state.EveningList}
-                updateEntries={this.updateEntries}
-                deleteEntries={this.deleteEntries}
-              />
-            </ExpansionPanelDetails>
-          </ExpansionPanel>
-        </div>
-      </div>
-    );
-  }
-}
+  )
+);
 
-export default App;
+export default function ClippedDrawer() {
+  const [recentData, setRecentData] = useState({});
+  const [tokenCount, setCount] = useState(0);
+  const [open, setOpen] = useState(false);
+  const classes = useStyles();
+
+  const getCount = () => {
+    axios.get("/countTokens").then(({ data }) => {
+      setCount(data.count);
+      //   setLoading({ loading: false });
+    });
+  };
+  const getRecent = () => {
+    axios.get("/topdata").then(({ data }) => {
+      setRecentData(data);
+    });
+  };
+
+  useEffect(() => {
+    getRecent();
+    getCount();
+  }, []);
+
+  return (
+    <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <Drawer
+          className={classes.drawer}
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <Toolbar />
+          <div className={classes.drawerContainer}>
+            <List>
+              {["Home", "Messages"].map((text, index) => (
+                <Link to={`/${text.toLowerCase()}`}>
+                  <ListItem button key={text}>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </Link>
+              ))}
+            </List>
+            <Divider />
+            <br />
+            <br />
+            <div className="counterContainer">
+              <Counter counter={tokenCount} getCount={getCount} />
+            </div>
+            <br />
+            <br />
+            <Divider />
+            <div
+              className="compose_button_container"
+              onClick={() => setOpen(true)}
+            >
+              <button className="compose_button">
+                <span className="compose_icon">+</span>{" "}
+                <span className="compose_text">Compose</span>
+              </button>
+            </div>
+          </div>
+        </Drawer>
+        <main className={classes.content}>
+          <Switch>
+            <Route
+              exact
+              path="/home"
+              children={<Recent topData={recentData} />}
+            />
+            <Route exact path="/messages" children={<Messages />} />
+          </Switch>
+          <NewPrompt type="new" open={open} setOpen={setOpen} />
+        </main>
+      </div>
+    </Router>
+  );
+}

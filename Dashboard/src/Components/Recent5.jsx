@@ -8,6 +8,7 @@ const Recent5 = ({ topData }) => {
       result.push(
         <div className="recent_card">
           <div className="img_container">
+            <div className="img_overlay">{time}</div>
             <img src={`./images/${time}.jpeg`} className="recent_cards_img" />
           </div>
           <CardListEntry time={topData[time]} />
@@ -17,9 +18,12 @@ const Recent5 = ({ topData }) => {
     return result;
   };
   return (
-    <div className="cards_container">
-      <Cards />
-    </div>
+    <>
+      <h2>Five Most Recently Sent</h2>
+      <div className="cards_container">
+        <Cards />
+      </div>
+    </>
   );
 };
 

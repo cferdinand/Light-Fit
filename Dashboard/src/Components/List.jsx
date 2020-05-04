@@ -1,6 +1,6 @@
 import React from "react";
 import ListEntry from "./ListEntry";
-import DeleteModal from "./DeleteModal";
+import DeleteModal from "./Forms/DeleteForm";
 import EditModal from "./EditModal";
 
 const List = ({ list, updateEntries, deleteEntries }) => {

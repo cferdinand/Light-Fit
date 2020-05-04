@@ -3,13 +3,19 @@ import React from "react";
 const CardList = ({ time }) => {
   const Card = () => {
     return time.map((prompts, idx) => {
+      let date = new Date(prompts.LastSent).toDateString().slice(0, -5);
       return (
-        <tr key={idx} className="recent_messagerow">
-          <td className="recent_messagedate">
-            {new Date(prompts.LastSent).toDateString()}
-          </td>
-          <td className="recent_messageprompt">{prompts.Prompt}</td>
-        </tr>
+        <>
+          <tr key={idx} className="recent_messagerow">
+            <td className="recent_messagedate">{date}</td>
+            <td className="recent_messageprompt">{prompts.Prompt}</td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <hr className="card_rule" colspan />
+            </td>
+          </tr>
+        </>
       );
     });
   };

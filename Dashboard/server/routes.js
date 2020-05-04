@@ -14,6 +14,7 @@ router.get("/countTokens", controllers.command.countTokens);
 router.get("/topdata", controllers.command.recentlySent);
 router.get("/home", auth.verifyLogin, serveStaticFile);
 router.get("/login", auth.isLoggedIn, serveStaticFile);
+router.get("/messages", auth.verifyLogin, serveStaticFile);
 
 //POST
 router.post("/postOne", controllers.command.postOne);

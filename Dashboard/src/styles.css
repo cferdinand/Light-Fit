@@ -1,4 +1,5 @@
-html {
+html,
+table.prompts_table {
   height: 100%;
   width: 100%;
   margin: 0px;
@@ -49,6 +50,15 @@ NAV
 .nav_bar {
   display: flex;
   place-content: space-between;
+  position: fixed;
+  z-index: 1400;
+  width: 100%;
+  background-color: plum;
+}
+
+.nav_logo {
+  display: flex;
+  align-items: center;
 }
 
 .nav_logo_image {
@@ -57,13 +67,14 @@ NAV
 
 span.header {
   font-size: 45px;
-  top: 17px;
-  position: relative;
-  vertical-align: top;
 }
 .logout {
   align-self: center;
-  width: 4rem;
+  width: 6rem;
+}
+
+.logout_button {
+  margin-left: 6px;
 }
 
 .logout :hover {
@@ -74,6 +85,10 @@ span.header {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+ul.MuiList-padding {
+  padding-top: 16px;
 }
 
 /*
@@ -166,6 +181,20 @@ CARDS
   justify-content: space-evenly;
 }
 
+main.makeStyles-content-15 {
+  padding-top: 78px;
+}
+
+main.makeStyles-content-6 {
+  padding: 20px;
+  padding-top: 6rem;
+}
+
+h2 {
+  text-align: center;
+  font-size: 28px;
+}
+
 .recent_card {
   display: flex;
   flex-direction: column;
@@ -179,11 +208,24 @@ CARDS
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   position: relative;
+  box-shadow: 2px 1px 11px 0px;
 }
 
 .img_container {
   z-index: 1;
-  height: 25%;
+  height: 20%;
+  border-radius: 8px 8px 0 0;
+}
+
+.img_overlay {
+  position: absolute;
+  height: 22%;
+  width: 100%;
+  background-color: #fcfdfd5c;
+  z-index: 1500;
+  border-radius: inherit;
+  font-size: 35px;
+  font-variant: small-caps;
 }
 
 .recent_cards_img {
@@ -193,11 +235,19 @@ CARDS
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
-table {
+
+.card_text table {
   text-align: center;
+  padding-top: 18px;
+  -webkit-border-horizontal-spacing: 7px;
 }
+
+.card_text table th {
+  padding-bottom: 5px;
+}
+
 .card_text {
-  position: relative;
+  height: 80%;
   width: 100%;
   font-size: 14px;
   overflow: scroll;
@@ -207,18 +257,24 @@ table {
   display: none;
 }
 
+hr.card_rule {
+  width: 23.5rem;
+}
+
 .recent_messagedate {
   font-size: 12px;
 }
 
 .recent_messagedate {
   width: 24%;
-  text-align: center;
+  text-align: left;
+  vertical-align: top;
 }
 
 .recent_messageprompt {
   font-size: 14px;
   width: 76%;
+  text-align: left;
 }
 
 /*
@@ -227,13 +283,51 @@ LIST ENTRY
 =========
 */
 
+ul.time_picker {
+  display: flex;
+  list-style: none;
+  justify-content: flex-end;
+}
+
+.time_picker li {
+  margin: 0 12px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+/* li a {
+  align-items: center;
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  color: #4a4a4a;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0px;
+  padding: 0em 1em;
+} */
+
+li.active::after {
+  content: " ";
+  position: relative;
+  top: 0px;
+  width: 21px;
+  height: 2px;
+  border-width: 10px;
+  background-color: #dda0dd61;
+  box-shadow: 0px -1px 13px 1px plum;
+  align-self: center;
+}
+
 .alert-modal {
   background-color: white;
-  margin: 300px 300px 0px 300px;
+  margin: auto 300px;
   padding: 21px;
   text-align: center;
   border-style: solid;
   border-width: thin;
+  border-radius: 8px;
 }
 
 .buttons {
@@ -279,17 +373,46 @@ LIST ENTRY
   color: white;
 }
 
+/*
+Expansion
+*/
+
+.collapsible {
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.content {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+}
+
+.content p {
+  margin: 0;
+}
+
 /*COUNTER*/
 
-h2.downloadHeader {
-  margin: 0;
+.makeStyles-drawerContainer-14 {
+  padding-top: 20px;
+}
+
+span.downloadHeader {
+  font-size: 14px;
 }
 
 .counterNumber {
   margin-left: 20px;
   margin-right: 5px;
-
-  font-size: 24px;
+  font-size: 14px;
 }
 span.refreshIcon {
   align-self: center;
@@ -302,6 +425,7 @@ span svg.MuiSvgIcon-root {
 
 span svg.MuiSvgIcon-root:hover {
   cursor: pointer;
+  color: plum;
 }
 
 .counterContainer {
@@ -310,13 +434,90 @@ span svg.MuiSvgIcon-root:hover {
   margin: 20px 0px 20px 0px;
 }
 
+.counterContainer:hover {
+  background-color: #d3d3d329;
+}
+
 .downloadCounter {
   display: flex;
   width: 80%;
   justify-content: center;
 }
+.compose_button_container {
+  height: 150px;
+  justify-content: center;
+  display: flex;
+}
+button.compose_button {
+  height: 35%;
+  width: 75%;
+  border-radius: 44px;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1.5px 3px 6px 0px #d4d4d4bd;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+}
 
+button.compose_button:focus {
+  outline: 0;
+}
+
+button.compose_button:active {
+  background: grey;
+  color: white;
+  box-shadow: inset -1px 1px 9px 0px black;
+}
+
+span.compose_icon {
+  font-size: 37px;
+  position: relative;
+  bottom: 4px;
+  padding-right: 20px;
+  background: -webkit-radial-gradient(#eeaeca, #94bbe9);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+span.compose_text {
+  font-size: 18px;
+  margin: 0;
+  font-variant: small-caps;
+}
 /*LIST*/
+.message_list_header {
+  background-color: #fafafa;
+  height: 80px;
+  position: fixed;
+  width: inherit;
+}
+
+.time_picker_row {
+  position: fixed;
+  left: 72%;
+}
+
+.list_header {
+  position: fixed;
+  top: 140px;
+}
+
+.list_header th:first-child {
+  position: fixed;
+  left: 50%;
+}
+.list_header th:nth-child(2) {
+  position: fixed;
+  left: 94.43%;
+}
+
+.all_prompt_messages {
+  padding-top: 95px;
+  display: inline-table;
+}
 
 .expansion {
   margin: 80px;
@@ -364,7 +565,7 @@ span svg.MuiSvgIcon-root:hover {
   margin: 0px 0px 0px 30px;
 }
 
-.text span {
+.prompt_icons {
   display: flex;
 }
 
@@ -379,10 +580,42 @@ p {
 
 /*Form*/
 
+div.form_modal {
+  bottom: -20%;
+  top: 20%;
+}
+
 .form {
-  flex-direction: column;
   margin: 0px 350px;
-  align-items: center;
+  background-color: white;
+  height: 375px;
+  width: 600px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.form form {
+  display: inline-block;
+  text-align: left;
+}
+
+.emoji_active {
+  height: 37px;
+  width: 37px;
+  border-radius: 12px;
+  vertical-align: top;
+  background-color: #00000005;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.emoji_logo {
+  height: 20px;
+}
+
+.emoji_active:focus {
+  outline: none;
 }
 
 .add-video {
@@ -437,12 +670,6 @@ p {
 }
 
 /*EMOJI*/
-
-.emoji-picker {
-  display: flex;
-  justify-content: baseline;
-  margin: 20px 10px;
-}
 
 .emoji-button {
   font-size: 300%;

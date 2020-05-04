@@ -81,10 +81,11 @@ module.exports = {
       );
     },
     deleteOne: async (req, res) => {
-      let result = req.body;
-      let time = req.body.Time;
+      let id = req.body.id;
+      console.log(id);
+      let time = req.body.time;
       try {
-        await timeOfDay[time].collection.deleteOne(result);
+        await timeOfDay[time].findByIdAndDelete(id);
         res.sendStatus(200);
       } catch (err) {
         console.log(err, "delete promise error");
@@ -162,7 +163,7 @@ module.exports = {
       const token = createToken(userExists._id);
       res
         .status(200)
-        .cookie("ww-token", token, { httpOnly: true, maxAge: 360000 })
+        .cookie("ww-token", token, { httpOnly: true, maxAge: 3600000 })
         .send({ loggedIn: true });
     },
     logout: (req, res) => {

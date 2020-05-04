@@ -10,13 +10,8 @@ class Messages extends Component {
     this.state = {
       prompts: [],
       selected: "Morning",
-      string: "",
-      entry: "",
       loading: true,
     };
-
-    //CRUD
-    this.postEntries = this.postEntries.bind(this);
 
     //Input Handlers
     this.handleSubmit = this.handleSubmit.bind(this);
